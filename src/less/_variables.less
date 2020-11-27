@@ -1,0 +1,59 @@
+@primary: #5fa2dd;
+@secondary: #ee77a5;
+@text_main: #3a356c;
+@text_highlited: #ce5274;
+@main_bg: #f5f5f5;
+@grey: #9896a5;
+@dark_grey: #333;
+@light_grey: #bbb;
+@dark: #1a222b;
+@white: #fff;
+@danger: #d44950;
+
+@header_height: 100px;
+@footer_height: 100px;
+
+@focus_shadow: 0 0 4px @grey;
+@br: 10px;
+
+@roboto: "Roboto", sans-serif;
+@castoro: "Castoro", serif;
+
+//mixins
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.vert-align-center {
+  display: flex;
+  align-items: center;
+}
+.thumbnail {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  img {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.transition {
+  transition: all 0.2s;
+}
+//media
+@xl: ~"(max-width: 1200px)";
+@lg: ~"(max-width: 992px)";
+@md: ~"(max-width: 768px)";
+@sm: ~"(max-width: 540px)";
+@xs: ~"(max-width: 360px)";
+
+@container: 1170px;
+@container_xl: 960px;
+@container_lg: 720px;
+@container_md: 540px;
+@container_sm: 100%;
