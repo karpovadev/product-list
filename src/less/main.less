@@ -7,16 +7,16 @@ body {
   font-size: 16px;
 }
 
-header {
+.header {
   height: @header_height;
 }
 
-footer {
+.footer {
   height: @footer_height;
 }
 
-header,
-footer {
+.header,
+.footer {
   .align-center();
   background-color: @text_main;
   color: @white;
@@ -35,17 +35,6 @@ a {
 .container {
   width: @container;
   margin: 0 auto;
-}
-
-.products-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  .total {
-    font-size: 22px;
-    font-weight: 500;
-  }
 }
 
 .products-wrapper {
@@ -147,25 +136,65 @@ a {
 }
 .grid-toggle {
   .transition();
-  margin-right: 10px;
   transition: all 0.2s;
+  font-size: 20px;
   cursor: pointer;
   &:hover {
     color: @secondary;
   }
 }
 
-.products-bar {
+.filters {
+  display: flex;
+  justify-content: space-between;
   .filter-field {
-    display: flex;
-    align-items: center;
-  }
-  .vue-picker {
-    width: 160px;
+    width: 23%;
+    max-width: 350px;
   }
   label {
-    margin-right: 10px;
+    display: block;
+    font-weight: 500;
+  }
+  .price {
+    .inp {
+      width: 45%;
+    }
   }
 }
+
+.product-bar {
+  padding: 15px 0;
+  &-header {
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  }
+  .total {
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .vue-picker {
+    width: 100%;
+    > button {
+      .inp();
+    }
+    .vue-picker-option {
+      color: @text_main;
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+    }
+    &__dropdown {
+      z-index: 10;
+    }
+    &__opener-txt {
+      color: @text_main
+    }
+  }
+}
+
+
 
 @import "_media.less";

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>Header <font-awesome-icon far icon="heart" /></header>
+    <header class="header">Header</header>
     <main>
       <!-- <div id="nav">
         <router-link to="/">Home</router-link> |
@@ -8,7 +8,7 @@
       </div> -->
       <router-view />
     </main>
-    <footer>&copy; Copyright 2020 | All rights reserved</footer>
+    <footer class="footer">&copy; Copyright 2020 | All rights reserved</footer>
   </div>
 </template>
 <style>

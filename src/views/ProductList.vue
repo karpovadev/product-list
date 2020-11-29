@@ -1,37 +1,10 @@
 <template>
   <div class="container">
-    <div class="products-bar">
-      <div class="total">{{ total }} results</div>
-      <div class="filters">
-        <div class="filter-field">
-          <label>Filter by:</label>
-          <vue-picker
-            @input="filterType = 'size'"
-            v-model="filterOption"
-            placeholder="Size"
-          >
-            <vue-picker-option
-              v-for="(size, index) in allSizes"
-              :value="size"
-              :key="index"
-              >{{ size }}</vue-picker-option
-            >
-          </vue-picker>
-          <vue-picker
-            @input="filterType = 'rating'"
-            v-model="filterOption"
-            placeholder="Rating"
-          >
-            <vue-picker-option
-              v-for="(rating, index) in allRates"
-              :value="rating.toString()"
-              :key="index"
-              >{{ rating }} stars</vue-picker-option
-            >
-          </vue-picker>
-        </div>
-      </div>
-      <div class="vert-align-center">
+    {{sortedOption}}
+    <div class="product-bar">
+      <header class="product-bar-header">
+        <div class="total">{{ productsTotal }} results</div>
+              <div class="vert-align-center">
         <div @click="gridView = !gridView" class="grid-toggle">
           <span v-if="!gridView">
             <font-awesome-icon icon="th" />
@@ -40,31 +13,58 @@
             <font-awesome-icon icon="bars" />
           </span>
         </div>
-        <div class="dropdown">
-          <vue-picker
-            @input="sortArray()"
-            v-model="sortedOption"
-            value=""
-            placeholder="Sorted by"
-          >
-            <template #opener="{ opener }">
-              <span>
-                <b>{{ opener.text }}</b>
-                <i>{{ opener.value }}</i>
-              </span>
-            </template>
-            <!-- <vue-picker-option text="Sort by: Most Relevant" value=""
-              >Most Relevant</vue-picker-option
-            > -->
-            <vue-picker-option text="Sort by:" value="price"
-              >Price</vue-picker-option
-            >
-            <vue-picker-option text="Sort by:" value="name"
-              >Name</vue-picker-option
+      </div>
+      </header>
+      <div class="filters">
+        <div class="filter-field">
+          <label>Size:</label>
+          <vue-picker placeholder="Select size" v-model="filters.size">
+            <vue-picker-option value="">Any</vue-picker-option>
+            <vue-picker-option
+              v-for="(size, index) in allSizes"
+              :value="size"
+              :key="index"
+              >{{ size }}</vue-picker-option
             >
           </vue-picker>
-        </div>
+           </div>
+           <div class="filter-field">
+             <label>Rating:</label>
+          <vue-picker v-model="filters.rating" placeholder="Select rating">
+            <vue-picker-option value="">Any</vue-picker-option>
+            <vue-picker-option
+              v-for="(rating, index) in allRates"
+              :value="rating.toString()"
+              :key="index"
+              >{{ rating }} stars</vue-picker-option
+            >
+          </vue-picker>
+          </div>
+           <div class="filter-field price">
+              <label>Prise:</label>
+              <div class="space-between">
+          <input v-model.lazy="filters.priceMin" type="number" class="inp" placeholder="Min." min="0"/>
+          <input v-model.lazy="filters.priceMax" type="number" class="inp" placeholder="Max." min="0" />
+          </div>
+           </div>
+           <div class="filter-field">
+             <label>Sort by:</label>
+             <vue-picker
+                v-model="sortParam"
+                placeholder="Select sorting"
+              >
+                <vue-picker-option value="">Default</vue-picker-option>
+            <vue-picker-option value="price"
+              >Price (asc)</vue-picker-option>
+                <vue-picker-option value="price-desc"
+              >Price (desc)</vue-picker-option>
+            <vue-picker-option value="name"
+              >Name (asc)</vue-picker-option
+            >
+          </vue-picker>
+           </div>
       </div>
+
     </div>
     <div :class="gridView ? 'grid-view' : 'list-view'" class="products-wrapper">
       <product-item
@@ -78,7 +78,7 @@
 
 <script>
 import ProductItem from "@/components/ProductItem.vue";
-import data from "../../data/products.json";
+// import data from "../../data/products.json";
 
 export default {
   name: "ProductList",
@@ -87,18 +87,18 @@ export default {
   },
   data() {
     return {
-      products: data,
+      products: [],
+      // products: data,
       gridView: true,
-      filterValue: "1",
-      filterBy: "1",
-      sortedOption: "",
       sizes: [],
-      filterOption: "",
-      filterType: "",
-      filter: {
-        type: "",
-        value: "",
+      filters: {
+        size: "",
+        rating: "",
+        priceMin: "",
+        priceMax: ""
       },
+      sortParam: "",
+      sortAsc: true
     };
   },
   computed: {
@@ -116,35 +116,67 @@ export default {
         (a, b) => a - b
       );
     },
+    allPrices() {
+      return [...new Set(this.products.map((item) => item.price))].sort(
+        (a, b) => a - b
+      );
+    },
     filteredData() {
-      let type = this.filterType;
-      let option = this.filterOption;
-
-      if (type && option) {
-        return this.products.filter((item) => item[type] == option);
+      let filters = this.filters;
+      let fData = this.products;
+      for (let type in filters) {
+        if (filters[type]) {
+          switch (type) {
+            case 'priceMin':
+               fData = fData.filter((item) => item.price >= +filters[type])
+            break;
+            case 'priceMax':
+              fData = fData.filter((item) => item.price <= +filters[type])
+            break;
+            default:
+            fData = fData.filter((item) => item[type] == filters[type])
+          }
+        }
       }
-      return this.products;
+      if (this.sortParam) {
+        return fData.sort(this.sortedFunc);
+      }
+      return fData;
+    },
+    productsTotal() {
+      return this.filteredData.length;
     },
   },
   methods: {
-    setFilterType(type) {
-      this.filterType = type;
+    onSort(e){
+       console.log(e)
+       this.sortedOption = e.type;
+      this.sortAsc = e.asc;
     },
-    sortArray() {
-      this.products.sort((a, b) => {
-        a.name - b.name;
-      });
+    sortedFunc(a,b) {
+      let sort = this.sortParam;
+      // Use toUpperCase() to ignore character casing
+        const productA = a[sort];
+        const productB = b[sort];
+
+        let comparison = 0;
+        if (productA > productB) {
+          comparison = 1;
+        } else if (productA < productB) {
+          comparison = -1;
+        }
+        return comparison;
     },
-    // getPosts() {
-    //   fetch("data/products.json");
-    //   fetch("https://jsonplaceholder.typicode.com/todos")
-    //     .then((response) => response.json())
-    //     .then((json) => console.log(json))
-    //     .catch((error) => console.log(error));
-    // },
+    getProducts() {
+      fetch("/data/products.json")
+        .then((response) => response.json())
+        .then((data) => data.map((product)=>{ product.price = +product.price.slice(1); return product;}))
+        .then((products)=>{this.products = products})
+        .catch((error) => console.log(error));
+    },
   },
   mounted() {
-    // this.getPosts();
+    this.getProducts();
   },
 };
 </script>

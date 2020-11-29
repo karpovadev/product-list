@@ -24,7 +24,7 @@
             ></span>
           </div>
           <div class="product-price">
-            <span class="price">{{ product.price }}</span>
+            <span class="price">${{ product.price }}</span>
             <span v-if="product.oldPrice">
               <span class="old-price">{{ product.oldPrice }} </span>
               <span class="savings">You save {{ product.savings }} </span>

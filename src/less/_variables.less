@@ -25,6 +25,11 @@
   justify-content: center;
   align-items: center;
 }
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .vert-align-center {
   display: flex;
   align-items: center;
@@ -45,6 +50,32 @@
 .transition {
   transition: all 0.2s;
 }
+.inp {
+  background-color: @white;
+  border: 1px solid @grey;
+  font-size: 16px;
+  padding: 10px;
+  height: 46px;
+  color: @text_main;
+
+  &:focus {
+    outline: 1px solid @text_main;
+    box-shadow: none;
+  }
+  &::-webkit-input-placeholder { 
+    color: @text_main;
+  }
+  &::-moz-placeholder { 
+    color: @text_main;
+  }
+  &:-ms-input-placeholder {
+    color: @text_main;
+  }
+  &:-moz-placeholder { 
+    color: @text_main;
+  }
+}
+
 //media
 @xl: ~"(max-width: 1200px)";
 @lg: ~"(max-width: 992px)";
