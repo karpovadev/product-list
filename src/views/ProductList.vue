@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    {{sortedOption}}
     <div class="product-bar">
       <header class="product-bar-header">
         <div class="total">{{ productsTotal }} results</div>
@@ -54,12 +53,12 @@
                 placeholder="Select sorting"
               >
                 <vue-picker-option value="">Default</vue-picker-option>
-            <vue-picker-option value="price"
-              >Price (asc)</vue-picker-option>
+            <vue-picker-option value="price-asc"
+              >Price: Low - High</vue-picker-option>
                 <vue-picker-option value="price-desc"
-              >Price (desc)</vue-picker-option>
-            <vue-picker-option value="name"
-              >Name (asc)</vue-picker-option
+              >Price: High - Low</vue-picker-option>
+            <vue-picker-option value="name-asc"
+              >Name: A - Z</vue-picker-option
             >
           </vue-picker>
            </div>
@@ -98,7 +97,6 @@ export default {
         priceMax: ""
       },
       sortParam: "",
-      sortAsc: true
     };
   },
   computed: {
@@ -148,24 +146,26 @@ export default {
     },
   },
   methods: {
-    onSort(e){
-       console.log(e)
-       this.sortedOption = e.type;
-      this.sortAsc = e.asc;
-    },
     sortedFunc(a,b) {
-      let sort = this.sortParam;
-      // Use toUpperCase() to ignore character casing
-        const productA = a[sort];
-        const productB = b[sort];
-
-        let comparison = 0;
+      let sort = this.sortParam.split('-')[0];
+      let order = this.sortParam.split('-')[1];
+      const productA = a[sort];
+      const productB = b[sort];
+      let comparison = 0;
+      if (order === 'asc') {
         if (productA > productB) {
           comparison = 1;
         } else if (productA < productB) {
           comparison = -1;
         }
-        return comparison;
+      } else {
+          if (productA < productB) {
+            comparison = 1;
+          } else if (productA > productB) {
+            comparison = -1;
+          }
+        }
+      return comparison;
     },
     getProducts() {
       fetch("/data/products.json")
