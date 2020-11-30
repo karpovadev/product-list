@@ -10,8 +10,8 @@
 @white: #fff;
 @danger: #d44950;
 
-@header_height: 100px;
-@footer_height: 100px;
+@header_height: 6rem;
+@footer_height: 6rem;
 
 @focus_shadow: 0 0 4px @grey;
 @br: 10px;
@@ -19,7 +19,9 @@
 @roboto: "Roboto", sans-serif;
 @castoro: "Castoro", serif;
 
-//mixins
+@context: 16px;
+@rem: 1rem / @context;
+
 .align-center {
   display: flex;
   justify-content: center;
@@ -61,16 +63,16 @@
     outline: 1px solid @text_main;
     box-shadow: none;
   }
-  &::-webkit-input-placeholder { 
+  &::-webkit-input-placeholder {
     color: @text_main;
   }
-  &::-moz-placeholder { 
+  &::-moz-placeholder {
     color: @text_main;
   }
   &:-ms-input-placeholder {
     color: @text_main;
   }
-  &:-moz-placeholder { 
+  &:-moz-placeholder {
     color: @text_main;
   }
 }
